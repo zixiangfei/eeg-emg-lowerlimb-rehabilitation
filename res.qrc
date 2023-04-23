@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>FontAwesome/fontawesome-webfont.ttf</file>
+        <file>Image/Server.png</file>
+        <file>Image/Idea_Stuff.png</file>
+        <file>Image/Library.png</file>
+        <file>Image/Misc_Designs.png</file>
+        <file>Image/Settings.png</file>
+        <file>QSS/Style.css</file>
+        <file>Image/arrow_simle_left.png</file>
+        <file>Image/arrow_simle_right.png</file>
+        <file>Image/radio_button_off.png</file>
+        <file>Image/radio_button_on.png</file>
+        <file>Image/Emotiv.png</file>
+        <file>Image/puzzle.png</file>
+        <file>Image/system_settings.png</file>
+        <file>Image/switch_off.png</file>
+        <file>Image/switch_on.png</file>
+        <file>Image/info.png</file>
+    </qresource>
+</RCC>

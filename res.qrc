@@ -17,5 +17,8 @@
         <file>Image/switch_off.png</file>
         <file>Image/switch_on.png</file>
         <file>Image/info.png</file>
+        <file>QSS/emgStyle.css</file>
+        <file>Image/channel_running.png</file>
+        <file>Image/channel_shutdown.png</file>
     </qresource>
 </RCC>

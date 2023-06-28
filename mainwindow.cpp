@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     loadStyleSheet("Style");
+    //loadStyleSheet("emgStyle");
     Log4cplusInit();
 
     currentWidget = 0;
@@ -126,6 +127,7 @@ void MainWindow::loadStyleSheet(QString name)
     file.open(QFile::ReadOnly);
     QString qss = QLatin1String(file.readAll());
     qApp->setStyleSheet(qss);
+    file.close();
 }
 
 void MainWindow::Log4cplusInit()

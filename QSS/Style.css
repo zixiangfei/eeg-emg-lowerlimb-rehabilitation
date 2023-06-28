@@ -7,16 +7,14 @@ QWidget:focus{
     border-radius:5px;
 }
 
+QWidget#centralWidget{
+    border-radius:0px;
+}
+/*border:1px solid #1B89CA;*/
+
 .QGroupBox{
     border:none;
 }
-
-QWidget#centralWidget{
-    /*border:1px solid #1B89CA;*/
-    border-radius:0px;
-}
-
-
 
 QWidget#state_widget{
     border-bottom:1px solid #adadad;
@@ -203,24 +201,40 @@ QPushButton#bend_manual_Button:disabled{
 
 
 QRadioButton#auto_radioButton,
-QRadioButton#manual_radioButton
-{
+QRadioButton#manual_radioButton,
+QRadioButton#square_radioButton,
+QRadioButton#trangular_radioButton,
+QRadioButton#constant_radioButton,
+QRadioButton#sine_radioButton{
         spacing: 2px;
         color:#0099FF;
 }
 
 QRadioButton#auto_radioButton::indicator,
-QRadioButton#manual_radioButton::indicator{
+QRadioButton#manual_radioButton::indicator,
+QRadioButton#square_radioButton::indicator,
+QRadioButton#trangular_radioButton::indicator,
+QRadioButton#constant_radioButton::indicator,
+QRadioButton#sine_radioButton::indicator{
         width: 32px;
         height: 32px;
 }
+
 QRadioButton#auto_radioButton::indicator::unchecked,
-QRadioButton#manual_radioButton::indicator::unchecked{
+QRadioButton#manual_radioButton::indicator::unchecked,
+QRadioButton#square_radioButton::indicator::unchecked,
+QRadioButton#trangular_radioButton::indicator::unchecked,
+QRadioButton#constant_radioButton::indicator::unchecked,
+QRadioButton#sine_radioButton::indicator::unchecked{
         image: url(":/Image/radio_button_off.png");
         color:red;
 }
 QRadioButton#auto_radioButton::indicator::checked,
-QRadioButton#manual_radioButton::indicator::checked{
+QRadioButton#manual_radioButton::indicator::checked,
+QRadioButton#square_radioButton::indicator::checked,
+QRadioButton#trangular_radioButton::indicator::checked,
+QRadioButton#constant_radioButton::indicator::checked,
+QRadioButton#sine_radioButton::indicator::checked{
         image: url(":/Image/radio_button_on.png");
         color:green;
 }
@@ -332,3 +346,229 @@ QPushButton#exit_pushButton:pressed{
     font-size:22px;
 }
 
+/*QGroupBox#small_keyboard_groupBox{
+    border: 1px solid #0000FF;
+    border-radius: 10px;
+}*/
+
+QPushButton#keyboard0_pushButton,
+QPushButton#keyboard1_pushButton,
+QPushButton#keyboard2_pushButton,
+QPushButton#keyboard3_pushButton,
+QPushButton#keyboard4_pushButton,
+QPushButton#keyboard5_pushButton,
+QPushButton#keyboard6_pushButton,
+QPushButton#keyboard7_pushButton,
+QPushButton#keyboard8_pushButton,
+QPushButton#keyboard9_pushButton,
+QPushButton#keyboard_confirm_pushButton,
+QPushButton#keyboard_clear_or_inf_pushButton{
+    width:60px;
+    height:50px;
+    border-radius:4px;
+    background-color:#0099FF;
+    border-style:none;
+    font-size:30px;
+    color:white;
+}
+
+QPushButton#keyboard0_pushButton:hover,
+QPushButton#keyboard1_pushButton:hover,
+QPushButton#keyboard2_pushButton:hover,
+QPushButton#keyboard3_pushButton:hover,
+QPushButton#keyboard4_pushButton:hover,
+QPushButton#keyboard5_pushButton:hover,
+QPushButton#keyboard6_pushButton:hover,
+QPushButton#keyboard7_pushButton:hover,
+QPushButton#keyboard8_pushButton:hover,
+QPushButton#keyboard9_pushButton:hover,
+QPushButton#keyboard_confirm_pushButton:hover,
+QPushButton#keyboard_clear_or_inf_pushButton:hover{
+    background-color:#00CCFF;
+}
+
+QPushButton#keyboard0_pushButton:pressed,
+QPushButton#keyboard1_pushButton:pressed,
+QPushButton#keyboard2_pushButton:pressed,
+QPushButton#keyboard3_pushButton:pressed,
+QPushButton#keyboard4_pushButton:pressed,
+QPushButton#keyboard5_pushButton:pressed,
+QPushButton#keyboard6_pushButton:pressed,
+QPushButton#keyboard7_pushButton:pressed,
+QPushButton#keyboard8_pushButton:pressed,
+QPushButton#keyboard9_pushButton:pressed,
+QPushButton#keyboard_confirm_pushButton:pressed,
+QPushButton#keyboard_clear_or_inf_pushButton:pressed{
+    margin-top:2px;
+    margin-left:2px;
+    font-size:28px;
+}
+
+QPushButton#keyboard0_pushButton:disabled,
+QPushButton#keyboard1_pushButton:disabled,
+QPushButton#keyboard2_pushButton:disabled,
+QPushButton#keyboard3_pushButton:disabled,
+QPushButton#keyboard4_pushButton:disabled,
+QPushButton#keyboard5_pushButton:disabled,
+QPushButton#keyboard6_pushButton:disabled,
+QPushButton#keyboard7_pushButton:disabled,
+QPushButton#keyboard8_pushButton:disabled,
+QPushButton#keyboard9_pushButton:disabled,
+QPushButton#keyboard_confirm_pushButton:disabled,
+QPushButton#keyboard_clear_or_inf_pushButton:disabled{
+    color:white;
+    background-color:#c0c0c0;
+}
+
+QLabel#port_channel1_freq_label,
+QLabel#port_channel2_freq_label,
+QLabel#port_channel3_freq_label,
+QLabel#port_channel4_freq_label{
+  color:white;
+  background-color:#8ECFC9;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+}
+QTextEdit#port_channel1_freq_textEdit,
+QTextEdit#port_channel2_freq_textEdit,
+QTextEdit#port_channel3_freq_textEdit,
+QTextEdit#port_channel4_freq_textEdit{
+    border:1px solid #8ECFC9;
+    border-top-right-radius:8px;
+    border-bottom-right-radius:8px;
+    background-color: palette(base);
+}
+
+QLabel#port_channel1_width_label,
+QLabel#port_channel2_width_label,
+QLabel#port_channel3_width_label,
+QLabel#port_channel4_width_label{
+  color:white;
+  background-color:#FFBE7A;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+}
+QTextEdit#port_channel1_width_textEdit,
+QTextEdit#port_channel2_width_textEdit,
+QTextEdit#port_channel3_width_textEdit,
+QTextEdit#port_channel4_width_textEdit{
+    border:1px solid #FFBE7A;
+    border-top-right-radius:8px;
+    border-bottom-right-radius:8px;
+    background-color: palette(base);
+}
+
+QLabel#port_channel1_time_label,
+QLabel#port_channel2_time_label,
+QLabel#port_channel3_time_label,
+QLabel#port_channel4_time_label{
+  color:white;
+  background-color:#BEB8DC;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+}
+QTextEdit#port_channel1_time_textEdit,
+QTextEdit#port_channel2_time_textEdit,
+QTextEdit#port_channel3_time_textEdit,
+QTextEdit#port_channel4_time_textEdit{
+    border:1px solid #BEB8DC;
+    border-top-right-radius:8px;
+    border-bottom-right-radius:8px;
+    background-color: palette(base);
+}
+
+QLabel#port_channel1_current_label,
+QLabel#port_channel2_current_label,
+QLabel#port_channel3_current_label,
+QLabel#port_channel4_current_label{
+  color:white;
+  background-color:#82B0D2;
+  border-top-left-radius:8px;
+  border-bottom-left-radius:8px;
+}
+QTextEdit#port_channel1_current_textEdit,
+QTextEdit#port_channel2_current_textEdit,
+QTextEdit#port_channel3_current_textEdit,
+QTextEdit#port_channel4_current_textEdit{
+    border:1px solid #82B0D2;
+    border-top-right-radius:8px;
+    border-bottom-right-radius:8px;
+    background-color: palette(base);
+}
+
+QPushButton#port_channel1_shoot_pushButton,
+QPushButton#port_channel2_shoot_pushButton,
+QPushButton#port_channel3_shoot_pushButton,
+QPushButton#port_channel4_shoot_pushButton{
+    border-radius:8px;
+    background-color:#54B345;
+    border-style:none;
+    font-size:24px;
+    color:white;
+}
+QPushButton#port_channel1_shoot_pushButton:hover,
+QPushButton#port_channel2_shoot_pushButton:hover,
+QPushButton#port_channel3_shoot_pushButton:hover,
+QPushButton#port_channel4_shoot_pushButton:hover{
+    background-color:#63E398;
+}
+QPushButton#port_channel1_shoot_pushButton:pressed,
+QPushButton#port_channel2_shoot_pushButton:pressed,
+QPushButton#port_channel3_shoot_pushButton:pressed,
+QPushButton#port_channel4_shoot_pushButton:pressed{
+    margin-top:2px;
+    margin-left:2px;
+    font-size:20px;
+}
+QPushButton#port_channel1_shoot_pushButton:disabled,
+QPushButton#port_channel2_shoot_pushButton:disabled,
+QPushButton#port_channel3_shoot_pushButton:disabled,
+QPushButton#port_channel4_shoot_pushButton:disabled{
+    color:white;
+    background-color:#c0c0c0;
+}
+
+QPushButton#port_channel1_pause_pushButton,
+QPushButton#port_channel2_pause_pushButton,
+QPushButton#port_channel3_pause_pushButton,
+QPushButton#port_channel4_pause_pushButton{
+    border-radius:8px;
+    background-color:#D76364;
+    border-style:none;
+    font-size:24px;
+    color:white;
+}
+QPushButton#port_channel1_pause_pushButton:hover,
+QPushButton#port_channel2_pause_pushButton:hover,
+QPushButton#port_channel3_pause_pushButton:hover,
+QPushButton#port_channel4_pause_pushButton:hover{
+    background-color:#EF7A6D;
+}
+QPushButton#port_channel1_pause_pushButton:pressed,
+QPushButton#port_channel2_pause_pushButton:pressed,
+QPushButton#port_channel3_pause_pushButton:pressed,
+QPushButton#port_channel4_pause_pushButton:pressed{
+    margin-top:2px;
+    margin-left:2px;
+    font-size:20px;
+}
+QPushButton#port_channel1_pause_pushButton:disabled,
+QPushButton#port_channel2_pause_pushButton:disabled,
+QPushButton#port_channel3_pause_pushButton:disabled,
+QPushButton#port_channel4_pause_pushButton:disabled{
+    color:white;
+    background-color:#c0c0c0;
+}
+
+/*QGraphicsView#port_channel_state_graphicsView_1,
+QGraphicsView#port_channel_state_graphicsView_2,
+QGraphicsView#port_channel_state_graphicsView_3,
+QGraphicsView#port_channel_state_graphicsView_4,{
+    image:url(":/Image/channel_running.png");
+}*/
+
+QLabel#port_channel_state_label1,
+QLabel#port_channel_state_label2,
+QLabel#port_channel_state_label3,
+QLabel#port_channel_state_label4{
+}

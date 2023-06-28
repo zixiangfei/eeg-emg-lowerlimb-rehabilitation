@@ -1,0 +1,73 @@
+/*QGroupBox#small_keyboard_groupBox{
+    border: 1px solid #0000FF;
+    border-radius: 10px;
+}*/
+
+QPushButton#keyboard0_pushButton,
+QPushButton#keyboard1_pushButton,
+QPushButton#keyboard2_pushButton,
+QPushButton#keyboard3_pushButton,
+QPushButton#keyboard4_pushButton,
+QPushButton#keyboard5_pushButton,
+QPushButton#keyboard6_pushButton,
+QPushButton#keyboard7_pushButton,
+QPushButton#keyboard8_pushButton,
+QPushButton#keyboard9_pushButton,
+QPushButton#keyboard_confirm_pushButton,
+QPushButton#keyboard_clear_or_inf_pushButton{
+    width:60px;
+    height:50px;
+    border-radius:4px;
+    background-color:#0099FF;
+    border-style:none;
+    font-size:30px;
+    color:white;
+}
+
+QPushButton#keyboard0_pushButton:hover,
+QPushButton#keyboard1_pushButton:hover,
+QPushButton#keyboard2_pushButton:hover,
+QPushButton#keyboard3_pushButton:hover,
+QPushButton#keyboard4_pushButton:hover,
+QPushButton#keyboard5_pushButton:hover,
+QPushButton#keyboard6_pushButton:hover,
+QPushButton#keyboard7_pushButton:hover,
+QPushButton#keyboard8_pushButton:hover,
+QPushButton#keyboard9_pushButton:hover,
+QPushButton#keyboard_confirm_pushButton:hover,
+QPushButton#keyboard_clear_or_inf_pushButton:hover{
+    background-color:#00CCFF;
+}
+
+PushButton#keyboard0_pushButton:pressed,
+QPushButton#keyboard1_pushButton:pressed,
+QPushButton#keyboard2_pushButton:pressed,
+QPushButton#keyboard3_pushButton:pressed,
+QPushButton#keyboard4_pushButton:pressed,
+QPushButton#keyboard5_pushButton:pressed,
+QPushButton#keyboard6_pushButton:pressed,
+QPushButton#keyboard7_pushButton:pressed,
+QPushButton#keyboard8_pushButton:pressed,
+QPushButton#keyboard9_pushButton:pressed,
+QPushButton#keyboard_confirm_pushButton:pressed,
+QPushButton#keyboard_clear_or_inf_pushButton:pressed{
+    margin-top:2px;
+    margin-left:2px;
+    font-size:28px;
+}
+
+QPushButton#keyboard0_pushButton:disabled,
+QPushButton#keyboard1_pushButton:disabled,
+QPushButton#keyboard2_pushButton:disabled,
+QPushButton#keyboard3_pushButton:disabled,
+QPushButton#keyboard4_pushButton:disabled,
+QPushButton#keyboard5_pushButton:disabled,
+QPushButton#keyboard6_pushButton:disabled,
+QPushButton#keyboard7_pushButton:disabled,
+QPushButton#keyboard8_pushButton:disabled,
+QPushButton#keyboard9_pushButton:disabled,
+QPushButton#keyboard_confirm_pushButton:disabled,
+QPushButton#keyboard_clear_or_inf_pushButton:disabled{
+    color:white;
+    background-color:#c0c0c0;
+}

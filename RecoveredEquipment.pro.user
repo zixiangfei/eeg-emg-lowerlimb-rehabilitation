@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.14.1, 2023-04-13T19:52:20. -->
+<!-- Written by QtCreator 4.14.1, 2023-06-28T10:12:40. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -290,8 +290,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/pi/Desktop/check_copy/RecoveredEquipment/RecoveredEquipment.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/pi/Desktop/check_copy/RecoveredEquipment/RecoveredEquipment.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">RecoveredEquipment2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/pi/Desktop/RecoveredEquipment/RecoveredEquipment.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/pi/Desktop/RecoveredEquipment/RecoveredEquipment.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>

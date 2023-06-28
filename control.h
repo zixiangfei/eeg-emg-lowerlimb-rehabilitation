@@ -10,6 +10,9 @@
 #include <log4cplus/loggingmacros.h>
 #include <log4cplus/fileappender.h>
 #include <log4cplus/layout.h>
+#include <angle.h> //新建线程获取角度信息
+#include <wiringPi.h> //gpio
+#include <motorcontrol.h> //电机控制
 using namespace log4cplus;
 using namespace log4cplus::helpers;
 
@@ -52,6 +55,8 @@ private slots:
 
     void timeSpinBoxSlot();
 
+    void getAngleSlot(double angle); //获取角度的槽
+
 private:
     void Log4cplusInit();
 signals:
@@ -60,6 +65,8 @@ signals:
     void stopEEGsignal();
     void manualControlSignal(motorControlCmd mcd);
     void startTimerSignal(int interval);
+    void motorStateSignal(double maxAngle, double minAngle, int speed, int runningTime);
+    void motorModelSignal(int model);
 
 private:
     Ui::Control *ui;
@@ -69,6 +76,9 @@ private:
    // bool startOrstop;
     struct motorControlCmd mcd;
     QSettings *settings;
+    double angle; //角度值
+    Angle *angleThread; //角度线程
+    motorControl *motorControlThread; //电机线程
 
 };
 extern int controlModel;

@@ -346,7 +346,7 @@
          <set>Qt::AlignCenter</set>
         </property>
         <property name="maximum">
-         <number>255</number>
+         <number>10</number>
         </property>
        </widget>
       </item>
@@ -373,10 +373,10 @@
          <set>Qt::AlignCenter</set>
         </property>
         <property name="minimum">
-         <number>78</number>
+         <number>70</number>
         </property>
         <property name="maximum">
-         <number>168</number>
+         <number>90</number>
         </property>
        </widget>
       </item>
@@ -403,10 +403,10 @@
          <set>Qt::AlignCenter</set>
         </property>
         <property name="minimum">
-         <number>78</number>
+         <number>8</number>
         </property>
         <property name="maximum">
-         <number>168</number>
+         <number>60</number>
         </property>
        </widget>
       </item>

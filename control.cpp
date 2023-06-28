@@ -86,6 +86,9 @@ Control::Control(QWidget *parent) :
         int d = settings->value(BEND_INI).toInt();
         ui->bend_spinBox->setValue(d);
     }
+    angleThread = new Angle();//创建angle线程
+    motorControlThread = new motorControl(); //电机线程
+    connect(angleThread, SIGNAL(Angle_val(double)), this, SLOT(getAngleSlot(double))); //绑定获取角度的槽和信号
     connect(ui->start_stop_manual_Button,SIGNAL(clicked()),this,SLOT(manualStartStopSlot()));
     connect(ui->stretch_manual_Button,SIGNAL(clicked()),this,SLOT(manualStretchSlot()));
     connect(ui->bend_manual_Button,SIGNAL(clicked()),this,SLOT(manualBendSlot()));
@@ -93,6 +96,8 @@ Control::Control(QWidget *parent) :
     connect(ui->time_spinBox,SIGNAL(valueChanged(int)),this,SLOT(timeValueSlot(int)));
     connect(ui->stretch_spinBox,SIGNAL(valueChanged(int)),this,SLOT(stretchValueSlot(int)));
     connect(ui->bend_spinBox,SIGNAL(valueChanged(int)),this,SLOT(bendValueSlot(int)));
+    connect(this, SIGNAL(motorStateSignal(double, double, int, int)), motorControlThread, SLOT(motorStateControlSlot(double, double, int, int)));
+    connect(this, SIGNAL(motorModelSignal(int)), motorControlThread, SLOT(motorModelControlSlot(int)));
     Log4cplusInit();
 }
 Control::~Control()
@@ -176,8 +181,10 @@ void Control::on_stop_auto_pushButton_clicked()
 void Control::manualStartStopSlot() //send start or stop serial cmd
 {
      char temp[3];
+     qDebug() << startOrstop <<'\n';
     if(startOrstop)
     {
+          //Control::angleThread->exit();
           mcd.head = 0XAA;
           mcd.cmd = 0XFF;
           mcd.control= 0X00;
@@ -187,9 +194,16 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
 
           ui->time_spinBox->setDisabled(false);
           emit ControlMsgSignal(INFO_MSG,tr("stop manual run device "));
+          Control::motorControlThread->terminateMotor();
+          emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), 0, 0));
+          //Control::motorControlThread->requestInterruption();
+          Control::motorControlThread->exit();
+          //qDebug()<< QThread::currentThreadId() << " " << "test\n";
     }
     else
      {
+        //Control::angleThread->run();
+
         startOrstop = true;
         timeValue = ui->time_spinBox->value();
         qDebug()<<"timeValue"<<timeValue;
@@ -211,15 +225,22 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
         {
             emit startTimerSignal(1000*60*timeValue);
         }
-        emit startTimerSignal(1000*60*timeValue);
+        //emit startTimerSignal(1000*60*timeValue);
+        //这句话正确性存疑 先注释掉
 
         emit ControlMsgSignal(INFO_MSG,tr("start manual run device "));
         ui->time_spinBox->setDisabled(true);
-
+        //修改电机状态
+        emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), ui->speed_spinBox->value(), ui->time_spinBox->value()));
+        //选择电机模式
+        emit(motorModelSignal(REPEAT_MODE));
+        Control::motorControlThread->start();
+        Control::motorControlThread->exit();
     }
 }
 void Control::manualStretchSlot() //send manual stretch serial cmd
 {
+    Control::motorControlThread->exit();
     char temp[3];
     if (startOrstop)
     {
@@ -239,9 +260,13 @@ void Control::manualStretchSlot() //send manual stretch serial cmd
     else{
         emit ControlMsgSignal(INFO_MSG,tr("Device not start"));
     }
+    emit(motorModelSignal(STRETCH_MODE));
+    Control::motorControlThread->start();
+    Control::motorControlThread->exit();
 }
 void Control::manualBendSlot() //send manual bend serial cmd
 {
+    Control::motorControlThread->exit();
     char temp[3];
     if (startOrstop)
     {
@@ -261,6 +286,9 @@ void Control::manualBendSlot() //send manual bend serial cmd
     else{
         emit ControlMsgSignal(INFO_MSG,tr("Device not start"));
     }
+    emit(motorModelSignal(BEND_MODE));
+    Control::motorControlThread->start();
+    Control::motorControlThread->exit();
 }
 
 void Control::Log4cplusInit()
@@ -287,6 +315,8 @@ void Control::Log4cplusInit()
 
 void Control::speendValueSlot(int arg)
 {
+
+    emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), ui->speed_spinBox->value(), ui->time_spinBox->value()));
     char temp[3];
     mcd.head = 0XAA;
     mcd.cmd = 0X01;
@@ -304,6 +334,7 @@ void Control::speendValueSlot(int arg)
 
 void Control::stretchValueSlot(int arg)
 {
+    emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), ui->speed_spinBox->value(), ui->time_spinBox->value()));
     char temp[3];
     mcd.head = 0XAA;
     mcd.cmd = 0X03;
@@ -321,6 +352,8 @@ void Control::stretchValueSlot(int arg)
 
 void Control::bendValueSlot(int arg)
 {
+
+    emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), ui->speed_spinBox->value(), ui->time_spinBox->value()));
     char temp[3];
     mcd.head = 0XAA;
     mcd.cmd = 0X04;
@@ -339,6 +372,7 @@ void Control::bendValueSlot(int arg)
 
 void Control::timeValueSlot(int arg)
 {
+    emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), ui->speed_spinBox->value(), ui->time_spinBox->value()));
     settings->setValue(TIMEINFO_INI,arg);
 
 }
@@ -357,4 +391,8 @@ void Control::autoButtonStateSlot(bool startButtonState)
 void Control::timeSpinBoxSlot()
 {
     ui->time_spinBox->setDisabled(false);
+}
+
+void Control::getAngleSlot(double angle) {
+    Control::angle = angle;
 }

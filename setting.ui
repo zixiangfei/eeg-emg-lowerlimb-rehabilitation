@@ -42,7 +42,7 @@
         <x>0</x>
         <y>0</y>
         <width>521</width>
-        <height>230</height>
+        <height>224</height>
        </rect>
       </property>
       <property name="font">
@@ -190,7 +190,7 @@
         <x>0</x>
         <y>0</y>
         <width>521</width>
-        <height>230</height>
+        <height>224</height>
        </rect>
       </property>
       <attribute name="icon">
@@ -207,7 +207,7 @@
         <x>0</x>
         <y>0</y>
         <width>521</width>
-        <height>230</height>
+        <height>224</height>
        </rect>
       </property>
       <attribute name="icon">

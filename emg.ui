@@ -1,21 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>EMG</class>
- <widget name="EMG" class="QWidget">
+ <widget class="QWidget" name="EMG">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>718</width>
+    <height>434</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QPushButton" name="port_open_close_pushButton">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>20</y>
+     <width>91</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>打开</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="port_label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>50</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>端口</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QToolBox" name="toolBox">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>80</y>
+     <width>561</width>
+     <height>300</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="emg_channel_page_1">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>561</width>
+      <height>156</height>
+     </rect>
+    </property>
+    <attribute name="label">
+     <string>通道1</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="emg_channel_page_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>561</width>
+      <height>156</height>
+     </rect>
+    </property>
+    <attribute name="label">
+     <string>通道2</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="emg_channel_page_page_3">
+    <attribute name="label">
+     <string>通道3</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="emg_channel_page_page_4">
+    <attribute name="label">
+     <string>通道4</string>
+    </attribute>
+   </widget>
+  </widget>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

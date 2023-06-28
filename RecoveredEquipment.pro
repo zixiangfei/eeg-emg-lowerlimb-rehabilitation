@@ -13,12 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    angle.cpp \
         mainwindow.cpp \
     IcoHelper/iconhelper.cpp \
     SystemInfo/systeminfo.cpp \
     control.cpp \
     eeg.cpp \
     emg.cpp \
+    motorcontrol.cpp \
     setting.cpp \
     qcustomplot.cpp \
     emokit/emokit.cpp \
@@ -34,9 +36,11 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     IcoHelper/iconhelper.h \
     SystemInfo/systeminfo.h \
+    angle.h \
     control.h \
     eeg.h \
     emg.h \
+    motorcontrol.h \
     setting.h \
     includes.h \
     qcustomplot.h \
@@ -62,4 +66,5 @@ RESOURCES += \
 LIBS += /usr/lib/libmcrypt.so \
         /usr/lib/aarch64-linux-gnu/libhidapi-hidraw.so \
         /usr/lib/aarch64-linux-gnu/libfftw3.so.3 \
-        /usr/local/lib/liblog4cplus.so
+        /usr/local/lib/liblog4cplus.so \
+        "/usr/lib/libwiringPi.so"

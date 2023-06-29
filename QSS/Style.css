@@ -499,23 +499,37 @@ QTextEdit#port_channel4_current_textEdit{
 QPushButton#port_channel1_shoot_pushButton,
 QPushButton#port_channel2_shoot_pushButton,
 QPushButton#port_channel3_shoot_pushButton,
-QPushButton#port_channel4_shoot_pushButton{
+QPushButton#port_channel4_shoot_pushButton,
+QPushButton#port_open_close_pushButton,
+QPushButton#port_all_channel_open_close_pushButton{
     border-radius:8px;
     background-color:#54B345;
     border-style:none;
     font-size:24px;
     color:white;
 }
+
+QPushButton#port_all_channel_open_close_pushButton{
+    width:180px;
+    height:70px;
+    font-size:20px;
+}
+
+
 QPushButton#port_channel1_shoot_pushButton:hover,
 QPushButton#port_channel2_shoot_pushButton:hover,
 QPushButton#port_channel3_shoot_pushButton:hover,
-QPushButton#port_channel4_shoot_pushButton:hover{
+QPushButton#port_channel4_shoot_pushButton:hover,
+QPushButton#port_open_close_pushButton:hover,
+QPushButton#port_all_channel_open_close_pushButton:hover{
     background-color:#63E398;
 }
 QPushButton#port_channel1_shoot_pushButton:pressed,
 QPushButton#port_channel2_shoot_pushButton:pressed,
 QPushButton#port_channel3_shoot_pushButton:pressed,
-QPushButton#port_channel4_shoot_pushButton:pressed{
+QPushButton#port_channel4_shoot_pushButton:pressed,
+QPushButton#port_open_close_pushButton:pressed,
+QPushButton#port_all_channel_open_close_pushButton:pressed{
     margin-top:2px;
     margin-left:2px;
     font-size:20px;
@@ -523,7 +537,9 @@ QPushButton#port_channel4_shoot_pushButton:pressed{
 QPushButton#port_channel1_shoot_pushButton:disabled,
 QPushButton#port_channel2_shoot_pushButton:disabled,
 QPushButton#port_channel3_shoot_pushButton:disabled,
-QPushButton#port_channel4_shoot_pushButton:disabled{
+QPushButton#port_channel4_shoot_pushButton:disabled,
+QPushButton#port_open_close_pushButton:disabled,
+QPushButton#port_all_channel_open_close_pushButton:disabled{
     color:white;
     background-color:#c0c0c0;
 }

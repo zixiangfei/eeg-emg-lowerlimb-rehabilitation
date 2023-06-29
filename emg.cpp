@@ -7,13 +7,13 @@ EMG::EMG(QWidget *parent) :
 {
     ui->setupUi(this);
     //loadStyleSheet("emgStyle");
-    QPixmap init_pixmap(":/Image/channel_running.png");
-    ui->port_channel_state_label_1->setPixmap(init_pixmap);
-    ui->port_channel_state_label_2->setPixmap(init_pixmap);
-    ui->port_channel_state_label_3->setPixmap(init_pixmap);
-    ui->port_channel_state_label_4->setPixmap(init_pixmap);
+    QPixmap init_pixmap(":/Image/channel_shutdown.png");
     int label_width = ui->port_channel_state_label_1->width(), label_height = ui->port_channel_state_label_1->height();
     QPixmap fixmap = init_pixmap.scaled(label_width, label_height, Qt::KeepAspectRatio, Qt::SmoothTransformation);//按比例缩放
+    ui->port_channel_state_label_1->setPixmap(fixmap);
+    ui->port_channel_state_label_2->setPixmap(fixmap);
+    ui->port_channel_state_label_3->setPixmap(fixmap);
+    ui->port_channel_state_label_4->setPixmap(fixmap);
     //初始化图案，测试用
 }
 

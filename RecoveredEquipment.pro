@@ -13,6 +13,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
+    CustomControls/porttimetextedit.cpp \
     angle.cpp \
         mainwindow.cpp \
     IcoHelper/iconhelper.cpp \
@@ -34,6 +35,7 @@ SOURCES += main.cpp\
     FFTW/FFTW.cpp
 
 HEADERS  += mainwindow.h \
+    CustomControls/porttimetextedit.h \
     IcoHelper/iconhelper.h \
     SystemInfo/systeminfo.h \
     angle.h \

@@ -6,6 +6,10 @@
 #include <QDebug>
 #include "includes.h"
 #include <QKeyEvent>
+#include <QGraphicsItem>
+#include <math.h>
+
+#define PI 3.1415926
 
 namespace Ui {
 class EMG;
@@ -18,6 +22,10 @@ class EMG : public QWidget
 private:
     void loadStyleSheet(QString name);
     void smalleKeyBoardInit();
+    void drawConstantWave(int channelNum);
+    void drawSineWave(int channelNum);
+    void drawTrangularWave(int channelNum);
+    void drawSquareWave(int channelNum);
 
 public:
     explicit EMG(QWidget *parent = 0);

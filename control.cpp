@@ -96,8 +96,8 @@ Control::Control(QWidget *parent) :
     connect(ui->time_spinBox,SIGNAL(valueChanged(int)),this,SLOT(timeValueSlot(int)));
     connect(ui->stretch_spinBox,SIGNAL(valueChanged(int)),this,SLOT(stretchValueSlot(int)));
     connect(ui->bend_spinBox,SIGNAL(valueChanged(int)),this,SLOT(bendValueSlot(int)));
-    connect(this, SIGNAL(motorStateSignal(double, double, int, int)), motorControlThread, SLOT(motorStateControlSlot(double, double, int, int)));
-    connect(this, SIGNAL(motorModelSignal(int)), motorControlThread, SLOT(motorModelControlSlot(int)));
+    connect(this, SIGNAL(motorStateSignal(double, double, int, int)), motorControlThread, SLOT(motorStateControlSlot(double, double, int, int))); //电机状态信号
+    connect(this, SIGNAL(motorModelSignal(int)), motorControlThread, SLOT(motorModelControlSlot(int))); //模式选择信号
     Log4cplusInit();
 }
 Control::~Control()

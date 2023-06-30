@@ -15,12 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
     CustomControls/porttimetextedit.cpp \
     angle.cpp \
-        mainwindow.cpp \
+    emg/emg.cpp \
+    emg/portchannelattr.cpp \
+    mainwindow.cpp \
     IcoHelper/iconhelper.cpp \
     SystemInfo/systeminfo.cpp \
     control.cpp \
     eeg.cpp \
-    emg.cpp \
     motorcontrol.cpp \
     setting.cpp \
     qcustomplot.cpp \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     angle.h \
     control.h \
     eeg.h \
-    emg.h \
+    emg/emg.h \
+    emg/portchannelattr.h \
     motorcontrol.h \
     setting.h \
     includes.h \

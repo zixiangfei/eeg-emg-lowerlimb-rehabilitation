@@ -39,10 +39,15 @@ EMG::EMG(QWidget *parent) :
     EMG::ui->port_channel2_width_textEdit->installEventFilter(this);
     EMG::ui->port_channel3_width_textEdit->installEventFilter(this);
     EMG::ui->port_channel4_width_textEdit->installEventFilter(this);
-
+    //单选
     for(auto radioBtn : EMG::ui->port_channel_wave_choose_groupBox->findChildren<QRadioButton*>()) {
         connect(radioBtn, SIGNAL(clicked(bool)), this, SLOT(slot_set_channel_wave_form()));
     }
+//    测试绘图功能
+//    EMG::drawConstantWave(1);
+//    EMG::drawSquareWave(2);
+//    EMG::drawTrangularWave(3);
+//    EMG::drawSineWave(4);
 }
 
 EMG::~EMG()
@@ -178,4 +183,192 @@ void EMG::slot_set_channel_wave_form() {
     if(EMG::ui->square_radioButton->isChecked()) {
         qDebug() << "方波" << '\n';
     }
+}
+
+/*
+ * 显示恒波
+ */
+void EMG::drawConstantWave(int channelNum) {
+    QGraphicsView *view = nullptr;
+    switch(channelNum) {
+    case 1:
+        view = EMG::ui->port_channel1_wave_graphicsView_1;
+        break;
+    case 2:
+        view = EMG::ui->port_channel2_wave_graphicsView;
+        break;
+    case 3:
+        view = EMG::ui->port_channel3_wave_graphicsView;
+        break;
+    case 4:
+        view = EMG::ui->port_channel4_wave_graphicsView;
+        break;
+    default:
+        break;
+    }
+    if(view == nullptr) {
+        return;
+    }
+    QGraphicsScene *scene;
+    if(view->scene()) {
+        scene = view->scene();
+        scene->clear();
+    }
+    else {
+        scene = new QGraphicsScene;
+        view->setScene(scene);
+    }
+    QGraphicsLineItem* item = new QGraphicsLineItem;
+    item->setLine(20, 65, 120, 65);
+    scene->addItem(item);
+    view->show();
+}
+
+/*
+ * 显示方波
+ */
+void EMG::drawSquareWave(int channelNum) {
+    QGraphicsView *view = nullptr;
+    switch(channelNum) {
+    case 1:
+        view = EMG::ui->port_channel1_wave_graphicsView_1;
+        break;
+    case 2:
+        view = EMG::ui->port_channel2_wave_graphicsView;
+        break;
+    case 3:
+        view = EMG::ui->port_channel3_wave_graphicsView;
+        break;
+    case 4:
+        view = EMG::ui->port_channel4_wave_graphicsView;
+        break;
+    default:
+        break;
+    }
+    if(view == nullptr) {
+        return;
+    }
+    QGraphicsScene *scene;
+    if(view->scene()) {
+        scene = view->scene();
+        scene->clear();
+    }
+    else {
+        scene = new QGraphicsScene;
+        view->setScene(scene);
+    }
+    QGraphicsPathItem *pItem = new QGraphicsPathItem;
+    QPainterPath path;
+    path.moveTo(20, 65);
+    path.lineTo(40, 65);
+    path.lineTo(40, 45);
+    path.lineTo(60, 45);
+    path.lineTo(60, 65);
+    path.lineTo(80, 65);
+    path.lineTo(80, 45);
+    path.lineTo(100, 45);
+    path.lineTo(100, 65);
+    path.lineTo(120, 65);
+    pItem->setPath(path);
+    pItem->pen().setWidth(2);
+    scene->addItem(pItem);
+    view->show();
+}
+
+/*
+ * 显示三角波
+ */
+void EMG::drawTrangularWave(int channelNum) {
+    QGraphicsView *view = nullptr;
+    switch(channelNum) {
+    case 1:
+        view = EMG::ui->port_channel1_wave_graphicsView_1;
+        break;
+    case 2:
+        view = EMG::ui->port_channel2_wave_graphicsView;
+        break;
+    case 3:
+        view = EMG::ui->port_channel3_wave_graphicsView;
+        break;
+    case 4:
+        view = EMG::ui->port_channel4_wave_graphicsView;
+        break;
+    default:
+        break;
+    }
+    if(view == nullptr) {
+        return;
+    }
+    QGraphicsScene *scene;
+    if(view->scene()) {
+        scene = view->scene();
+        scene->clear();
+    }
+    else {
+        scene = new QGraphicsScene;
+        view->setScene(scene);
+    }
+    QGraphicsPathItem *pItem = new QGraphicsPathItem;
+    QPainterPath path;
+    path.moveTo(20, 65);
+    path.lineTo(50, 65);
+    path.lineTo(60, 45);
+    path.lineTo(80, 85);
+    path.lineTo(90, 65);
+    path.lineTo(120, 65);
+    pItem->setPath(path);
+    pItem->pen().setWidth(2);
+    scene->addItem(pItem);
+    view->show();
+}
+
+/*
+ * 显示正弦波
+ */
+void EMG::drawSineWave(int channelNum) {
+    QGraphicsView *view = nullptr;
+    switch(channelNum) {
+    case 1:
+        view = EMG::ui->port_channel1_wave_graphicsView_1;
+        break;
+    case 2:
+        view = EMG::ui->port_channel2_wave_graphicsView;
+        break;
+    case 3:
+        view = EMG::ui->port_channel3_wave_graphicsView;
+        break;
+    case 4:
+        view = EMG::ui->port_channel4_wave_graphicsView;
+        break;
+    default:
+        break;
+    }
+    if(view == nullptr) {
+        return;
+    }
+    QGraphicsScene *scene;
+    if(view->scene()) {
+        scene = view->scene();
+        scene->clear();
+    }
+    else {
+        scene = new QGraphicsScene;
+        view->setScene(scene);
+    }
+    QGraphicsPathItem *pItem = new QGraphicsPathItem;
+    QPainterPath path;
+    path.moveTo(20, 65);
+    path.lineTo(50, 65);
+    double x = 50, y = 65;
+    for (int i = 1; i <= 360; ++i) {
+        double rad = i * PI / 180.0;
+        double dy = sin(rad) * 20;
+        double dx = 40 * i / 360;
+        path.lineTo(x + dx, y + dy);
+    }
+    path.lineTo(120, 65);
+    pItem->setPath(path);
+    pItem->pen().setWidth(2);
+    scene->addItem(pItem);
+    view->show();
 }

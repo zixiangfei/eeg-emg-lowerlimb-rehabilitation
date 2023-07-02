@@ -2,11 +2,37 @@
 #define PORTCHANNELATTR_H
 #include <QWidget>
 
+#define CONSTANT_WAVE 1
+#define SINE_WAVE 2
+#define SQUARE_WAVE 3
+#define TRANGULAR_WAVE 4
+#define CHANNEL_SHUTDOWN 0
+#define CHANNEL_RUNNING 1
+#define INF_TIME 0
+
 class portChannelAttr
 {
     //Q_OBJECT
 public:
     portChannelAttr();
+
+    int getChannelState() const;
+    void setChannelState(int value);
+
+    int getChannelWaveForm() const;
+    void setChannelWaveForm(int value);
+
+    int getChannelWaveFreq() const;
+    void setChannelWaveFreq(int value);
+
+    int getChannelWaveWidth() const;
+    void setChannelWaveWidth(int value);
+
+    int getChannelWaveTime() const;
+    void setChannelWaveTime(int value);
+
+    int getChannelWaveCurrent() const;
+    void setChannelWaveCurrent(int value);
 
 private:
     int channelState; // 1 running 0 shutdown

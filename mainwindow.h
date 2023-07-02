@@ -9,7 +9,7 @@
 #include <QThread>
 #include "control.h"
 #include "eeg.h"
-#include "emg.h"
+#include "emg/emg.h"
 #include "setting.h"
 #include "includes.h"
 #include "emokit/qemokit.h"

@@ -198,6 +198,8 @@ void MainWindow::on_pushButton3_clicked()
     ui->MainVerticalLayout->addWidget(EMGWidget);
     currentWidget = 3;
 
+    connect(EMGWidget, SIGNAL(EmgMsgSignal(MSG_TYPE, QString)), this, SLOT(stateShowMessageSlot(MSG_TYPE, QString)));
+
     ui->Back_pushButton->setDisabled(false);
     IconHelper::Instance()->SetIcon(ui->Back_pushButton, QChar(ICO_BACK), 20);
     LOG4CPLUS_INFO(_logger,"currentWidget["<<currentWidget<<"]...");

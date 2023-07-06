@@ -7,7 +7,7 @@ EEG::EEG(QWidget *parent) :
 {
     ui->setupUi(this);
     lineChartinit();
-    //EEG::testTimer = new QTimer(this);
+    EEG::testTimer = new QTimer(this);
     ui->battery_progressBar->setRange(0,100);
     ui->battery_progressBar->setValue(100);
     xAxis_num = 0;

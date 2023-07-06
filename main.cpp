@@ -19,7 +19,6 @@
 
 int main(int argc, char *argv[])
 {
-    qDebug()<< QThread::currentThreadId() << " " << "test\n";
     QApplication a(argc, argv);
     wiringPiSetup();
     pcf8591Setup(PCF8591_BASE, PCF8591_ADDRESS);

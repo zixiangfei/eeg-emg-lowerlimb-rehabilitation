@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -16,6 +17,7 @@ SOURCES += main.cpp\
     CustomControls/porttimetextedit.cpp \
     angle.cpp \
     emg/emg.cpp \
+    emg/emgserialport.cpp \
     emg/portchannelattr.cpp \
     mainwindow.cpp \
     IcoHelper/iconhelper.cpp \
@@ -43,6 +45,7 @@ HEADERS  += mainwindow.h \
     control.h \
     eeg.h \
     emg/emg.h \
+    emg/emgserialport.h \
     emg/portchannelattr.h \
     motorcontrol.h \
     setting.h \

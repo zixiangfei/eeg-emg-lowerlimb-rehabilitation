@@ -47,7 +47,7 @@ private:
     QCPGraph *graph_P8;
     QCPGraph *graph_O1;
     QCPGraph *graph_O2;
-    //QTimer *testTimer;
+    QTimer *testTimer;
 
     double xAxis_num;
 

@@ -69,6 +69,12 @@ MainWindow::MainWindow(QWidget *parent) :
     timeThread = new QThread;
     timeThread->start();
     runTimer->moveToThread(timeThread);
+
+    EMGSerialPort *emgSerialPort = new EMGSerialPort();
+    ControlWidget = new Control;
+    EEGWidget = new EEG;
+    EMGWidget = new EMG;
+    SettingWidget = new Setting;
 }
 MainWindow::~MainWindow()
 {
@@ -76,6 +82,10 @@ MainWindow::~MainWindow()
     emit runFinishSignal(mcd);
     delete systemInfo;
     delete stateBar;
+//    delete EMGWidget;
+//    delete SettingWidget;
+//    delete EEGWidget;
+//    delete ControlWidget;
     delete ui;
     qSerialportHelper->QSerialPortClose();
     delete qSerialportHelper;
@@ -154,10 +164,13 @@ void MainWindow::Log4cplusInit()
 
 void MainWindow::on_pushButton1_clicked()
 {
-    ControlWidget = new Control;
+//    if(ControlWidget == nullptr) {
+//        ControlWidget = new Control;
+//    }
     ui->main_widget->hide();
     ui->MainVerticalLayout->removeWidget(ui->main_widget);
     ui->MainVerticalLayout->addWidget(ControlWidget);
+    ControlWidget->show();
     currentWidget = 1;
 
     connect(ControlWidget,SIGNAL(ControlMsgSignal(MSG_TYPE, QString)),this,SLOT(stateShowMessageSlot(MSG_TYPE, QString)));
@@ -174,10 +187,13 @@ void MainWindow::on_pushButton1_clicked()
 
 void MainWindow::on_pushButton2_clicked()
 {
-    EEGWidget = new EEG;
+//    if(EEGWidget == nullptr) {
+//        EEGWidget = new EEG;
+//    }
     ui->main_widget->hide();
     ui->MainVerticalLayout->removeWidget(ui->main_widget);
     ui->MainVerticalLayout->addWidget(EEGWidget);
+    EEGWidget->show();
     currentWidget = 2;
 
     connect(qemokit,SIGNAL(batterySignal(unsigned char)),EEGWidget,SLOT(batterySlot(unsigned char)));
@@ -192,10 +208,13 @@ void MainWindow::on_pushButton2_clicked()
 
 void MainWindow::on_pushButton3_clicked()
 {
-    EMGWidget = new EMG;
+//    if(EMGWidget == nullptr) {
+//        EMGWidget = new EMG;
+//    }
     ui->main_widget->hide();
     ui->MainVerticalLayout->removeWidget(ui->main_widget);
     ui->MainVerticalLayout->addWidget(EMGWidget);
+    EMGWidget->show();
     currentWidget = 3;
 
     connect(EMGWidget, SIGNAL(EmgMsgSignal(MSG_TYPE, QString)), this, SLOT(stateShowMessageSlot(MSG_TYPE, QString)));
@@ -207,10 +226,13 @@ void MainWindow::on_pushButton3_clicked()
 
 void MainWindow::on_pushButton4_clicked()
 {
-    SettingWidget = new Setting;
+//    if(SettingWidget == nullptr) {
+//        SettingWidget = new Setting;
+//    }
     ui->main_widget->hide();
     ui->MainVerticalLayout->removeWidget(ui->main_widget);
     ui->MainVerticalLayout->addWidget(SettingWidget);
+    SettingWidget->show();
     currentWidget = 4;
 
     connect(SettingWidget,SIGNAL(systemInfoSignal(bool)),this,SLOT(systemInfoShowSlot(bool)));
@@ -230,28 +252,28 @@ void MainWindow::on_Back_pushButton_clicked()
         ui->MainVerticalLayout->removeWidget(ControlWidget);
         ui->MainVerticalLayout->addWidget(ui->main_widget);
         ui->main_widget->show();
-        delete ControlWidget;
+        //delete ControlWidget;
         break;
     case 2:
         EEGWidget->hide();
         ui->MainVerticalLayout->removeWidget(EEGWidget);
         ui->MainVerticalLayout->addWidget(ui->main_widget);
         ui->main_widget->show();
-        delete EEGWidget;
+        //delete EEGWidget;
         break;
     case 3:
         EMGWidget->hide();
         ui->MainVerticalLayout->removeWidget(EMGWidget);
         ui->MainVerticalLayout->addWidget(ui->main_widget);
         ui->main_widget->show();
-        delete EMGWidget;
+        //delete EMGWidget;
         break;
     case 4:
         SettingWidget->hide();
         ui->MainVerticalLayout->removeWidget(SettingWidget);
         ui->MainVerticalLayout->addWidget(ui->main_widget);
         ui->main_widget->show();
-        delete SettingWidget;
+        //delete SettingWidget;
         break;
     default:break;
     }

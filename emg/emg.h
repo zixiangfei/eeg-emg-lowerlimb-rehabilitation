@@ -4,13 +4,16 @@
 #include <QWidget>
 #include <QFile>
 #include <QDebug>
-#include "includes.h"
 #include <QKeyEvent>
 #include <QGraphicsItem>
 #include <math.h>
 #include <QSettings>
-#include "portchannelattr.h"
 #include <QTimer>
+#include <QSerialPort>
+#include <QThread>
+#include "portchannelattr.h"
+#include "includes.h"
+#include "emgserialport.h"
 
 #define PI 3.1415926
 #define RUNNING_MODEL 0
@@ -38,6 +41,10 @@ private:
     void updateChannel4UI();
     void setPushButtonRunningModel();
     void setPushButtonShutdownModel();
+    void initEMGSerialPort();
+    void sendSerialSetMsg(portChannelAttr channel, int channelNum);
+    void sendSerialTriggerMsg(int channelNum);
+    void sendSerialPauseMsg(int channelNum);
 
 
 
@@ -62,6 +69,7 @@ private:
     QTimer *channel4Qtimer;
     int runningChannel;
     int portAllChannelModel;
+    QSerialPort *emgSerialPort;
 
 
 private slots:
@@ -73,6 +81,10 @@ private slots:
     void on_port_channel2_shoot_pushButton_clicked();
     void on_port_channel3_shoot_pushButton_clicked();
     void on_port_channel4_shoot_pushButton_clicked();
+    void on_port_channe11_save_pushButton_clicked();
+    void on_port_channe12_save_pushButton_clicked();
+    void on_port_channe13_save_pushButton_clicked();
+    void on_port_channe14_save_pushButton_clicked();
     void slot_channel1QtimerTimeout();
     void slot_channel2QtimerTimeout();
     void slot_channel3QtimerTimeout();

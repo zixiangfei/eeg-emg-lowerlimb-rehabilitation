@@ -18,10 +18,6 @@ EMG::EMG(QWidget *parent) :
     EMG::channelUrl[4] = "/channel4";
     EMG::runningPix.load(":/Image/channel_running.png");
     EMG::shutdownPix.load(":/Image/channel_shutdown.png");
-//    EMG::channel1Qtimer->setSingleShot(true);
-//    EMG::channel2Qtimer->setSingleShot(true);
-//    EMG::channel3Qtimer->setSingleShot(true);
-//    EMG::channel4Qtimer->setSingleShot(true);
     EMG::now_selected_channel = ui->port_channel_tabWidget->currentIndex() + 1;
     int label_width = ui->port_channel_state_label_1->width(), label_height = ui->port_channel_state_label_1->height();
     EMG::runningPix = EMG::runningPix.scaled(label_width, label_height, Qt::KeepAspectRatio, Qt::SmoothTransformation);//按比例缩放
@@ -72,7 +68,17 @@ EMG::EMG(QWidget *parent) :
     connect(EMG::ui->port_channel2_pause_pushButton, SIGNAL(clicked()), this, SLOT(slot_port_channel2_pause_pushButtonClicked()));
     connect(EMG::ui->port_channel3_pause_pushButton, SIGNAL(clicked()), this, SLOT(slot_port_channel3_pause_pushButtonClicked()));
     connect(EMG::ui->port_channel4_pause_pushButton, SIGNAL(clicked()), this, SLOT(slot_port_channel4_pause_pushButtonClicked()));
+    connect(EMG::ui->port_channel1_save_pushButton, SIGNAL(clicked()), this, SLOT(on_port_channe11_save_pushButton_clicked()));
+    connect(EMG::ui->port_channel2_save_pushButton, SIGNAL(clicked()), this, SLOT(on_port_channe12_save_pushButton_clicked()));
+    connect(EMG::ui->port_channel3_save_pushButton, SIGNAL(clicked()), this, SLOT(on_port_channe13_save_pushButton_clicked()));
+    connect(EMG::ui->port_channel4_save_pushButton, SIGNAL(clicked()), this, SLOT(on_port_channe14_save_pushButton_clicked()));
     connect(EMG::ui->port_all_channel_open_close_pushButton, SIGNAL(clicked()), this, SLOT(slot_port_all_channel_open_close_pushButtonClicked()));
+
+    //串口初始化
+
+    EMG::initEMGSerialPort();
+
+    EMGSerialPort testPort;
 }
 
 EMG::~EMG()
@@ -854,49 +860,22 @@ void EMG::updateChannel4UI() {
  */
 void EMG::on_port_channel1_shoot_pushButton_clicked() {
     int channelNum = 1;
-    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    sendSerialTriggerMsg(channelNum);
+    int waveTime = EMG::ui->port_channel1_time_textEdit->toPlainText().toInt();
     int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
-    if(waveForm != CONSTANT_WAVE) {
-        waveFreq = EMG::ui->port_channel1_freq_textEdit->toPlainText().toInt();
-        waveWidth = EMG::ui->port_channel1_width_textEdit->toPlainText().toInt();
-        if(waveFreq < 1 || waveFreq > 1000) {
-            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
-            return;
-        }
-        if(waveWidth < 50 || waveWidth > 9950) {
-            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
-            return;
-        }
-    }
-    if(EMG::ui->port_channel1_time_textEdit->toPlainText() == "持续") {
-        waveTime = INF_TIME;
-    }
-    else {
-        waveTime = EMG::ui->port_channel1_time_textEdit->toPlainText().toInt();
-    }
-    waveCurrent = EMG::ui->port_channel1_current_textEdit->toPlainText().toInt();
-    if(waveCurrent < 5 || waveCurrent > 9995) {
-        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
-        return;
-    }
-    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
-    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
-    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
-    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
-    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
-    //留出空白给串口使用
-
-
+    int waveFreq = EMG::portChannels[channelNum].getChannelWaveFreq();
     EMG::ui->port_channel1_shoot_pushButton->setEnabled(false);
     EMG::ui->port_channel1_pause_pushButton->setEnabled(true);
     EMG::ui->port_channel_state_label_1->setPixmap(EMG::runningPix);
     emit EmgMsgSignal(INFO_MSG, "通道一启动");
     if(waveTime != INF_TIME) {
-        EMG::channel1Qtimer->setInterval(waveTime);
+        if(waveForm == CONSTANT_WAVE) {
+            EMG::channel1Qtimer->setInterval(waveTime);
+        }
+        else {
+            qDebug() << waveTime * 1000 / waveFreq << '\n';
+            EMG::channel1Qtimer->setInterval(waveTime * 1000 / waveFreq);
+        }
         EMG::channel1Qtimer->start();
     }
     EMG::runningChannel++;
@@ -911,51 +890,22 @@ void EMG::on_port_channel1_shoot_pushButton_clicked() {
  */
 void EMG::on_port_channel2_shoot_pushButton_clicked() {
     int channelNum = 2;
-    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    sendSerialTriggerMsg(channelNum);
+    int waveTime = EMG::ui->port_channel2_time_textEdit->toPlainText().toInt();
     int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
-    if(waveForm != CONSTANT_WAVE) {
-        waveFreq = EMG::ui->port_channel2_freq_textEdit->toPlainText().toInt();
-        waveWidth = EMG::ui->port_channel2_width_textEdit->toPlainText().toInt();
-        if(waveFreq < 1 || waveFreq > 1000) {
-            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
-            return;
-        }
-        if(waveWidth < 50 || waveWidth > 9950) {
-            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
-            return;
-        }
-    }
-    if(EMG::ui->port_channel2_time_textEdit->toPlainText() == "持续") {
-        waveTime = INF_TIME;
-    }
-    else {
-        waveTime = EMG::ui->port_channel2_time_textEdit->toPlainText().toInt();
-    }
-    waveCurrent = EMG::ui->port_channel2_current_textEdit->toPlainText().toInt();
-    if(waveCurrent < 5 || waveCurrent > 9995) {
-        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
-        return;
-    }
-    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
-    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
-    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
-    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
-    //emit EmgMsgSignal(ERROR_MSG, "按钮2按下");
-    //留出空白给串口使用
-
-
-
+    int waveFreq = EMG::portChannels[channelNum].getChannelWaveFreq();
     EMG::ui->port_channel2_shoot_pushButton->setEnabled(false);
     EMG::ui->port_channel2_pause_pushButton->setEnabled(true);
     EMG::ui->port_channel_state_label_2->setPixmap(EMG::runningPix);
     emit EmgMsgSignal(INFO_MSG, "通道二启动");
     if(waveTime != INF_TIME) {
-        EMG::channel2Qtimer->setInterval(waveTime);
-        //EMG::channel2Qtimer->setSingleShot(true);
+        if(waveForm == CONSTANT_WAVE) {
+            EMG::channel2Qtimer->setInterval(waveTime);
+        }
+        else {
+            qDebug() << waveTime * 1000 / waveFreq << '\n';
+            EMG::channel2Qtimer->setInterval(waveTime * 1000 / waveFreq);
+        }
         EMG::channel2Qtimer->start();
     }
     EMG::runningChannel++;
@@ -970,51 +920,22 @@ void EMG::on_port_channel2_shoot_pushButton_clicked() {
  */
 void EMG::on_port_channel3_shoot_pushButton_clicked() {
     int channelNum = 3;
-    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    sendSerialTriggerMsg(channelNum);
+    int waveTime = EMG::ui->port_channel3_time_textEdit->toPlainText().toInt();
     int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
-    if(waveForm != CONSTANT_WAVE) {
-        waveFreq = EMG::ui->port_channel3_freq_textEdit->toPlainText().toInt();
-        waveWidth = EMG::ui->port_channel3_width_textEdit->toPlainText().toInt();
-        if(waveFreq < 1 || waveFreq > 1000) {
-            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
-            return;
-        }
-        if(waveWidth < 50 || waveWidth > 9950) {
-            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
-            return;
-        }
-    }
-    if(EMG::ui->port_channel3_time_textEdit->toPlainText() == "持续") {
-        waveTime = INF_TIME;
-    }
-    else {
-        waveTime = EMG::ui->port_channel3_time_textEdit->toPlainText().toInt();
-    }
-    waveCurrent = EMG::ui->port_channel3_current_textEdit->toPlainText().toInt();
-    if(waveCurrent < 5 || waveCurrent > 9995) {
-        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
-        return;
-    }
-    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
-    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
-    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
-    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
-    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
-    //留出空白给串口使用
-
-
-
+    int waveFreq = EMG::portChannels[channelNum].getChannelWaveFreq();
     EMG::ui->port_channel3_shoot_pushButton->setEnabled(false);
     EMG::ui->port_channel3_pause_pushButton->setEnabled(true);
     EMG::ui->port_channel_state_label_3->setPixmap(EMG::runningPix);
     emit EmgMsgSignal(INFO_MSG, "通道三启动");
     if(waveTime != INF_TIME) {
-        EMG::channel3Qtimer->setInterval(waveTime);
-        //EMG::channel3Qtimer->setSingleShot(true);
+        if(waveForm == CONSTANT_WAVE) {
+            EMG::channel3Qtimer->setInterval(waveTime);
+        }
+        else {
+            qDebug() << waveTime * 1000 / waveFreq << '\n';
+            EMG::channel3Qtimer->setInterval(waveTime * 1000 / waveFreq);
+        }
         EMG::channel3Qtimer->start();
     }
     EMG::runningChannel++;
@@ -1029,51 +950,22 @@ void EMG::on_port_channel3_shoot_pushButton_clicked() {
  */
 void EMG::on_port_channel4_shoot_pushButton_clicked() {
     int channelNum = 4;
-    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    sendSerialTriggerMsg(channelNum);
+    int waveTime = EMG::ui->port_channel4_time_textEdit->toPlainText().toInt();
     int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
-    if(waveForm != CONSTANT_WAVE) {
-        waveFreq = EMG::ui->port_channel4_freq_textEdit->toPlainText().toInt();
-        waveWidth = EMG::ui->port_channel4_width_textEdit->toPlainText().toInt();
-        if(waveFreq < 1 || waveFreq > 1000) {
-            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
-            return;
-        }
-        if(waveWidth < 50 || waveWidth > 9950) {
-            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
-            return;
-        }
-    }
-    if(EMG::ui->port_channel4_time_textEdit->toPlainText() == "持续") {
-        waveTime = INF_TIME;
-    }
-    else {
-        waveTime = EMG::ui->port_channel4_time_textEdit->toPlainText().toInt();
-    }
-    waveCurrent = EMG::ui->port_channel4_current_textEdit->toPlainText().toInt();
-    if(waveCurrent < 5 || waveCurrent > 9995) {
-        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
-        return;
-    }
-    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
-    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
-    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
-    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
-    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
-    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
-    //留出空白给串口使用
-
-
-
+    int waveFreq = EMG::portChannels[channelNum].getChannelWaveFreq();
     EMG::ui->port_channel4_shoot_pushButton->setEnabled(false);
     EMG::ui->port_channel4_pause_pushButton->setEnabled(true);
     EMG::ui->port_channel_state_label_4->setPixmap(EMG::runningPix);
     emit EmgMsgSignal(INFO_MSG, "通道四启动");
     if(waveTime != INF_TIME) {
-        EMG::channel4Qtimer->setInterval(waveTime);
-        //EMG::channel4Qtimer->setSingleShot(true);
+        if(waveForm == CONSTANT_WAVE) {
+            EMG::channel4Qtimer->setInterval(waveTime);
+        }
+        else {
+            qDebug() << waveTime * 1000 / waveFreq << '\n';
+            EMG::channel4Qtimer->setInterval(waveTime * 1000 / waveFreq);
+        }
         EMG::channel4Qtimer->start();
     }
     EMG::runningChannel++;
@@ -1163,7 +1055,9 @@ void EMG::slot_channel4QtimerTimeout() {
  */
 void EMG::slot_port_channel1_pause_pushButtonClicked() {
     //留出空白供串口使用
-
+    QByteArray sendData = "$A1P;c1;#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
     EMG::ui->port_channel1_shoot_pushButton->setEnabled(true);
     EMG::ui->port_channel1_pause_pushButton->setEnabled(false);
     EMG::ui->port_channel_state_label_1->setPixmap(EMG::shutdownPix);
@@ -1183,8 +1077,9 @@ void EMG::slot_port_channel1_pause_pushButtonClicked() {
  * 暂停通道二的输出
  */
 void EMG::slot_port_channel2_pause_pushButtonClicked() {
-
-
+    QByteArray sendData = "$A1P;c2;#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
     EMG::ui->port_channel2_shoot_pushButton->setEnabled(true);
     EMG::ui->port_channel2_pause_pushButton->setEnabled(false);
     EMG::ui->port_channel_state_label_2->setPixmap(EMG::shutdownPix);
@@ -1204,8 +1099,9 @@ void EMG::slot_port_channel2_pause_pushButtonClicked() {
  * 暂停通道三的输出
  */
 void EMG::slot_port_channel3_pause_pushButtonClicked() {
-
-
+    QByteArray sendData = "$A1P;c3;#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
     EMG::ui->port_channel3_shoot_pushButton->setEnabled(true);
     EMG::ui->port_channel3_pause_pushButton->setEnabled(false);
     EMG::ui->port_channel_state_label_3->setPixmap(EMG::shutdownPix);
@@ -1225,6 +1121,9 @@ void EMG::slot_port_channel3_pause_pushButtonClicked() {
  * 暂停通道四的输出
  */
 void EMG::slot_port_channel4_pause_pushButtonClicked() {
+    QByteArray sendData = "$A1P;c4;#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
     EMG::ui->port_channel4_shoot_pushButton->setEnabled(true);
     EMG::ui->port_channel4_pause_pushButton->setEnabled(false);
     EMG::ui->port_channel_state_label_4->setPixmap(EMG::shutdownPix);
@@ -1246,27 +1145,122 @@ void EMG::slot_port_channel4_pause_pushButtonClicked() {
 void EMG::slot_port_all_channel_open_close_pushButtonClicked() {
     if(EMG::portAllChannelModel == RUNNING_MODEL) {
         // 串口通信
-
-
-
-        EMG::portAllChannelModel = SHUTDOWN_MODEL;
-        EMG::setPushButtonRunningModel();
-        EMG::on_port_channel1_shoot_pushButton_clicked();
-        EMG::on_port_channel2_shoot_pushButton_clicked();
-        EMG::on_port_channel3_shoot_pushButton_clicked();
-        EMG::on_port_channel4_shoot_pushButton_clicked();
-    }
-    else {
-        //串口通信
-
+        QByteArray sendData = "$A1T;c1234;#";
+        qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+        qDebug() << sendData << "\n字数" << bytesWritten << "\n";
 
 
         EMG::portAllChannelModel = RUNNING_MODEL;
-        EMG::setPushButtonShutdownModel();
-        EMG::slot_port_channel1_pause_pushButtonClicked();
-        EMG::slot_port_channel2_pause_pushButtonClicked();
-        EMG::slot_port_channel3_pause_pushButtonClicked();
-        EMG::slot_port_channel4_pause_pushButtonClicked();
+        //EMG::setPushButtonShutdownModel();
+
+        int waveTime1 = EMG::ui->port_channel1_time_textEdit->toPlainText().toInt();
+        int waveForm1 = EMG::portChannels[1].getChannelWaveForm();
+        int waveFreq1 = EMG::portChannels[1].getChannelWaveFreq();
+        EMG::ui->port_channel1_shoot_pushButton->setEnabled(false);
+        EMG::ui->port_channel1_pause_pushButton->setEnabled(true);
+        EMG::ui->port_channel_state_label_1->setPixmap(EMG::runningPix);
+        emit EmgMsgSignal(INFO_MSG, "通道一启动");
+        if(waveTime1 != INF_TIME) {
+            if(waveForm1 == CONSTANT_WAVE) {
+                EMG::channel1Qtimer->setInterval(waveTime1);
+            }
+            else {
+                EMG::channel1Qtimer->setInterval(waveTime1 * 1000 / waveFreq1);
+            }
+            EMG::channel1Qtimer->start();
+        }
+        int waveTime2 = EMG::ui->port_channel2_time_textEdit->toPlainText().toInt();
+        int waveForm2 = EMG::portChannels[2].getChannelWaveForm();
+        int waveFreq2 = EMG::portChannels[2].getChannelWaveFreq();
+        EMG::ui->port_channel2_shoot_pushButton->setEnabled(false);
+        EMG::ui->port_channel2_pause_pushButton->setEnabled(true);
+        EMG::ui->port_channel_state_label_2->setPixmap(EMG::runningPix);
+        emit EmgMsgSignal(INFO_MSG, "通道二启动");
+        if(waveTime2 != INF_TIME) {
+            if(waveForm2 == CONSTANT_WAVE) {
+                EMG::channel2Qtimer->setInterval(waveTime2);
+            }
+            else {
+                EMG::channel2Qtimer->setInterval(waveTime2 * 1000 / waveFreq2);
+            }
+            EMG::channel2Qtimer->start();
+        }
+        int waveTime3 = EMG::ui->port_channel3_time_textEdit->toPlainText().toInt();
+        int waveForm3 = EMG::portChannels[3].getChannelWaveForm();
+        int waveFreq3 = EMG::portChannels[3].getChannelWaveFreq();
+        EMG::ui->port_channel3_shoot_pushButton->setEnabled(false);
+        EMG::ui->port_channel3_pause_pushButton->setEnabled(true);
+        EMG::ui->port_channel_state_label_3->setPixmap(EMG::runningPix);
+        emit EmgMsgSignal(INFO_MSG, "通道三启动");
+        if(waveTime3 != INF_TIME) {
+            if(waveForm3 == CONSTANT_WAVE) {
+                EMG::channel3Qtimer->setInterval(waveTime3);
+            }
+            else {
+                EMG::channel3Qtimer->setInterval(waveTime3 * 1000 / waveFreq3);
+            }
+            EMG::channel3Qtimer->start();
+        }
+        int waveTime4 = EMG::ui->port_channel4_time_textEdit->toPlainText().toInt();
+        int waveForm4 = EMG::portChannels[4].getChannelWaveForm();
+        int waveFreq4 = EMG::portChannels[4].getChannelWaveFreq();
+        EMG::ui->port_channel4_shoot_pushButton->setEnabled(false);
+        EMG::ui->port_channel4_pause_pushButton->setEnabled(true);
+        EMG::ui->port_channel_state_label_4->setPixmap(EMG::runningPix);
+        emit EmgMsgSignal(INFO_MSG, "通道四启动");
+        if(waveTime4 != INF_TIME) {
+            if(waveForm4 == CONSTANT_WAVE) {
+                EMG::channel4Qtimer->setInterval(waveTime4);
+            }
+            else {
+                EMG::channel4Qtimer->setInterval(waveTime4 * 1000 / waveFreq4);
+            }
+            EMG::channel4Qtimer->start();
+        }
+
+        EMG::runningChannel = 4;
+
+    }
+    else {
+        //串口通信
+        QByteArray sendData = "$A1P;c1234;#";
+        qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+        qDebug() << sendData << "\n字数" << bytesWritten << "\n";
+
+
+        EMG::portAllChannelModel = RUNNING_MODEL;
+        EMG::setPushButtonRunningModel();
+        EMG::ui->port_channel1_shoot_pushButton->setEnabled(true);
+        EMG::ui->port_channel1_pause_pushButton->setEnabled(false);
+        EMG::ui->port_channel_state_label_1->setPixmap(EMG::shutdownPix);
+        if(EMG::channel1Qtimer->isActive()) {
+            EMG::channel1Qtimer->stop();
+        }
+        EMG::ui->port_channel2_shoot_pushButton->setEnabled(true);
+        EMG::ui->port_channel2_pause_pushButton->setEnabled(false);
+        EMG::ui->port_channel_state_label_2->setPixmap(EMG::shutdownPix);
+        if(EMG::channel2Qtimer->isActive()) {
+            EMG::channel2Qtimer->stop();
+        }
+        EMG::ui->port_channel3_shoot_pushButton->setEnabled(true);
+        EMG::ui->port_channel3_pause_pushButton->setEnabled(false);
+        EMG::ui->port_channel_state_label_3->setPixmap(EMG::shutdownPix);
+        if(EMG::channel3Qtimer->isActive()) {
+            EMG::channel3Qtimer->stop();
+        }
+        EMG::ui->port_channel4_shoot_pushButton->setEnabled(true);
+        EMG::ui->port_channel4_pause_pushButton->setEnabled(false);
+        EMG::ui->port_channel_state_label_4->setPixmap(EMG::shutdownPix);
+        if(EMG::channel4Qtimer->isActive()) {
+            EMG::channel4Qtimer->stop();
+        }
+
+
+        if(EMG::runningChannel == 4) {
+            EMG::portAllChannelModel = RUNNING_MODEL;
+            EMG::setPushButtonRunningModel();
+        }
+        EMG::runningChannel = 0;
     }
 }
 
@@ -1285,6 +1279,7 @@ void EMG::setPushButtonRunningModel() {
     "    background-color:#63E398;"
     "}"
     );
+    EMG::ui->port_all_channel_open_close_pushButton->setText("一键触发");
 }
 
 /*
@@ -1302,4 +1297,236 @@ void EMG::setPushButtonShutdownModel() {
     "    background-color:#EF7A6D;"
     "}"
     );
+    EMG::ui->port_all_channel_open_close_pushButton->setText("一键停止");
+}
+
+/*
+ * 串口初始化
+ */
+void EMG::initEMGSerialPort() {
+    EMG::emgSerialPort = new QSerialPort("/dev/ttyUSB0");
+    //EMG::emgSerialPort->setPortName("ttyUSB0");
+    EMG::emgSerialPort->setBaudRate(QSerialPort::Baud115200);
+    EMG::emgSerialPort->setDataBits(QSerialPort::Data8);
+    EMG::emgSerialPort->setParity(QSerialPort::NoParity);
+    EMG::emgSerialPort->setStopBits(QSerialPort::OneStop);
+    if(EMG::emgSerialPort->open(QIODevice::WriteOnly)) {
+        emit EmgMsgSignal(INFO_MSG, "电刺激设备已连接");
+        qDebug() << "电刺激设备已连接\n";
+    }
+    else {
+        emit EmgMsgSignal(ERROR_MSG, "电刺激设备初始化失败");
+        qDebug() << "电刺激设备初始化失败\n";
+    }
+}
+
+/*
+ * 串口发送通道设置信息
+ */
+void EMG::sendSerialSetMsg(portChannelAttr channel, int channelNum) {
+    QByteArray sendData = "$A1S;"; // 数据头 A1 机器码; S 设置参数
+    sendData += "c" + QByteArray::number(channelNum) + ";"; // 选择通道
+    sendData += "w" + QByteArray::number(channel.getChannelWaveForm()) + ";"; //波形
+    if(channel.getChannelWaveForm() != CONSTANT_WAVE) {
+        sendData += "f" + QByteArray::number(channel.getChannelWaveFreq()) + ";"; //频率
+        sendData += "p" + QByteArray::number(channel.getChannelWaveWidth()) + ";"; //波宽
+        sendData += "r";
+    }
+    else {
+        sendData += "t";
+    }
+    //时间
+    if(channel.getChannelWaveTime() == INF_TIME) {
+        sendData += "e;";
+    }
+    else {
+        sendData += QByteArray::number(channel.getChannelWaveTime()) + ";";
+    }
+    sendData += "o1;"; //方向默认 不能修改
+    sendData += "i" + QByteArray::number(channel.getChannelWaveCurrent()) + ";";
+    sendData += "#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
+}
+
+/*
+ * 通道一数据保存
+ */
+void EMG::on_port_channe11_save_pushButton_clicked() {
+    int channelNum = 1;
+    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
+    if(waveForm != CONSTANT_WAVE) {
+        waveFreq = EMG::ui->port_channel1_freq_textEdit->toPlainText().toInt();
+        waveWidth = EMG::ui->port_channel1_width_textEdit->toPlainText().toInt();
+        if(waveFreq < 1 || waveFreq > 1000) {
+            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
+            return;
+        }
+        if(waveWidth < 50 || waveWidth > 9950) {
+            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
+            return;
+        }
+    }
+    if(EMG::ui->port_channel1_time_textEdit->toPlainText() == "持续") {
+        waveTime = INF_TIME;
+    }
+    else {
+        waveTime = EMG::ui->port_channel1_time_textEdit->toPlainText().toInt();
+    }
+    waveCurrent = EMG::ui->port_channel1_current_textEdit->toPlainText().toInt();
+    if(waveCurrent < 5 || waveCurrent > 9995) {
+        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
+        return;
+    }
+    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
+    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
+    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
+    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
+    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
+    //留出空白给串口使用
+    EMG::sendSerialSetMsg(EMG::portChannels[channelNum], channelNum);
+}
+
+/*
+ * 通道二数据保存
+ */
+void EMG::on_port_channe12_save_pushButton_clicked() {
+    int channelNum = 2;
+    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
+    if(waveForm != CONSTANT_WAVE) {
+        waveFreq = EMG::ui->port_channel2_freq_textEdit->toPlainText().toInt();
+        waveWidth = EMG::ui->port_channel2_width_textEdit->toPlainText().toInt();
+        if(waveFreq < 1 || waveFreq > 1000) {
+            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
+            return;
+        }
+        if(waveWidth < 50 || waveWidth > 9950) {
+            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
+            return;
+        }
+    }
+    if(EMG::ui->port_channel2_time_textEdit->toPlainText() == "持续") {
+        waveTime = INF_TIME;
+    }
+    else {
+        waveTime = EMG::ui->port_channel2_time_textEdit->toPlainText().toInt();
+    }
+    waveCurrent = EMG::ui->port_channel2_current_textEdit->toPlainText().toInt();
+    if(waveCurrent < 5 || waveCurrent > 9995) {
+        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
+        return;
+    }
+    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
+    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
+    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
+    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
+    //emit EmgMsgSignal(ERROR_MSG, "按钮2按下");
+    //留出空白给串口使用
+    EMG::sendSerialSetMsg(EMG::portChannels[channelNum], channelNum);
+}
+
+/*
+ * 通道三数据保存
+ */
+void EMG::on_port_channe13_save_pushButton_clicked() {
+    int channelNum = 3;
+    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
+    if(waveForm != CONSTANT_WAVE) {
+        waveFreq = EMG::ui->port_channel3_freq_textEdit->toPlainText().toInt();
+        waveWidth = EMG::ui->port_channel3_width_textEdit->toPlainText().toInt();
+        if(waveFreq < 1 || waveFreq > 1000) {
+            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
+            return;
+        }
+        if(waveWidth < 50 || waveWidth > 9950) {
+            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
+            return;
+        }
+    }
+    if(EMG::ui->port_channel3_time_textEdit->toPlainText() == "持续") {
+        waveTime = INF_TIME;
+    }
+    else {
+        waveTime = EMG::ui->port_channel3_time_textEdit->toPlainText().toInt();
+    }
+    waveCurrent = EMG::ui->port_channel3_current_textEdit->toPlainText().toInt();
+    if(waveCurrent < 5 || waveCurrent > 9995) {
+        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
+        return;
+    }
+    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
+    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
+    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
+    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
+    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
+    //留出空白给串口使用
+    EMG::sendSerialSetMsg(EMG::portChannels[channelNum], channelNum);
+
+}
+
+/*
+ * 通道四数据保存
+ */
+void EMG::on_port_channe14_save_pushButton_clicked() {
+    int channelNum = 4;
+    int waveFreq = 0, waveWidth = 0, waveTime = 0, waveCurrent = 0;
+    int waveForm = EMG::portChannels[channelNum].getChannelWaveForm();
+    if(waveForm != CONSTANT_WAVE) {
+        waveFreq = EMG::ui->port_channel4_freq_textEdit->toPlainText().toInt();
+        waveWidth = EMG::ui->port_channel4_width_textEdit->toPlainText().toInt();
+        if(waveFreq < 1 || waveFreq > 1000) {
+            emit EmgMsgSignal(ERROR_MSG, "频率应在1～1000之间，请输入有效数字");
+            return;
+        }
+        if(waveWidth < 50 || waveWidth > 9950) {
+            emit EmgMsgSignal(ERROR_MSG, "波宽应在50～9950之间，请输入有效数字");
+            return;
+        }
+    }
+    if(EMG::ui->port_channel4_time_textEdit->toPlainText() == "持续") {
+        waveTime = INF_TIME;
+    }
+    else {
+        waveTime = EMG::ui->port_channel4_time_textEdit->toPlainText().toInt();
+    }
+    waveCurrent = EMG::ui->port_channel4_current_textEdit->toPlainText().toInt();
+    if(waveCurrent < 5 || waveCurrent > 9995) {
+        emit EmgMsgSignal(ERROR_MSG, "电流强度应在5～9995之间，请输入有效数字");
+        return;
+    }
+    EMG::portChannels[channelNum].setChannelWaveCurrent(waveCurrent);
+    EMG::portChannels[channelNum].setChannelWaveFreq(waveFreq);
+    EMG::portChannels[channelNum].setChannelWaveTime(waveTime);
+    EMG::portChannels[channelNum].setChannelWaveWidth(waveWidth);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/CurrentInfo", waveCurrent);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/FreqInfo", waveFreq);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/TimeInfo", waveTime);
+    EMG::settings->setValue(EMG::channelUrl[channelNum] + "/WidthInfo", waveWidth);
+    //emit EmgMsgSignal(ERROR_MSG, "按钮1按下");
+    //留出空白给串口使用
+    EMG::sendSerialSetMsg(EMG::portChannels[channelNum], channelNum);
+}
+
+/*
+ *
+ */
+void EMG::sendSerialTriggerMsg(int channelNum) {
+    QByteArray sendData = "$A1T;c" + QByteArray::number(channelNum) + ";#";
+    qint64 bytesWritten = EMG::emgSerialPort->write(sendData);
+    qDebug() << sendData << "\n字数" << bytesWritten << "\n";
 }

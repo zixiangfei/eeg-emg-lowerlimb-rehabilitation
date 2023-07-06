@@ -588,3 +588,37 @@ QLabel#port_channel_state_label2,
 QLabel#port_channel_state_label3,
 QLabel#port_channel_state_label4{
 }
+
+QPushButton#port_channel1_save_pushButton,
+QPushButton#port_channel2_save_pushButton,
+QPushButton#port_channel3_save_pushButton,
+QPushButton#port_channel4_save_pushButton{
+    border-radius:4px;
+    background-color:#0099FF;
+    border-style:none;
+    color:white;
+}
+
+QPushButton#port_channel1_save_pushButton:hover,
+QPushButton#port_channel2_save_pushButton:hover,
+QPushButton#port_channel3_save_pushButton:hover,
+QPushButton#port_channel4_save_pushButton:hover{
+    background-color:#00CCFF;
+}
+
+QPushButton#port_channel1_save_pushButton:pressed,
+QPushButton#port_channel2_save_pushButton:pressed,
+QPushButton#port_channel3_save_pushButton:pressed,
+QPushButton#port_channel4_save_pushButton:pressed{
+    margin-top:2px;
+    margin-left:2px;
+    font-size:18px;
+}
+
+QPushButton#port_channel1_save_pushButton:disabled,
+QPushButton#port_channel2_save_pushButton:disabled,
+QPushButton#port_channel3_save_pushButton:disabled,
+QPushButton#port_channel4_save_pushButton:disabled{
+    color:white;
+    background-color:#c0c0c0;
+}

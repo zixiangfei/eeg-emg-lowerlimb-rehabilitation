@@ -62,7 +62,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <widget class="QWidget" name="port_channel1_tab">
     <property name="layoutDirection">
@@ -336,6 +336,24 @@
       <string>停止</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="port_channel1_save_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>260</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>保存</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="prot_channel2_tab">
     <attribute name="title">
@@ -604,6 +622,24 @@
      </property>
      <property name="text">
       <string>停止</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="port_channel2_save_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>260</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>保存</string>
      </property>
     </widget>
    </widget>
@@ -876,6 +912,24 @@
       </widget>
      </widget>
     </widget>
+    <widget class="QPushButton" name="port_channel3_save_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>260</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>保存</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="port_channel4_tab">
     <attribute name="title">
@@ -1145,6 +1199,24 @@
        </property>
       </widget>
      </widget>
+    </widget>
+    <widget class="QPushButton" name="port_channel4_save_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>260</y>
+       <width>91</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>保存</string>
+     </property>
     </widget>
    </widget>
   </widget>

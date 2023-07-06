@@ -14,7 +14,6 @@
 #include "includes.h"
 #include "emokit/qemokit.h"
 #include "SerialPort/qserialporthelper.h"
-#include "emg/emgserialport.h"
 
 #include <log4cplus/logger.h>
 #include <log4cplus/configurator.h>

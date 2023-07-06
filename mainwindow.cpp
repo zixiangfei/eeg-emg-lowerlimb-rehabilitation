@@ -70,7 +70,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timeThread->start();
     runTimer->moveToThread(timeThread);
 
-    EMGSerialPort *emgSerialPort = new EMGSerialPort();
     ControlWidget = new Control;
     EEGWidget = new EEG;
     EMGWidget = new EMG;
@@ -82,10 +81,10 @@ MainWindow::~MainWindow()
     emit runFinishSignal(mcd);
     delete systemInfo;
     delete stateBar;
-//    delete EMGWidget;
-//    delete SettingWidget;
-//    delete EEGWidget;
-//    delete ControlWidget;
+    delete EMGWidget;
+    delete SettingWidget;
+    delete EEGWidget;
+    delete ControlWidget;
     delete ui;
     qSerialportHelper->QSerialPortClose();
     delete qSerialportHelper;

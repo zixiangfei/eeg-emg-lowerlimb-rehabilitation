@@ -1523,7 +1523,7 @@ void EMG::on_port_channe14_save_pushButton_clicked() {
 }
 
 /*
- *
+ * 串口触发信息
  */
 void EMG::sendSerialTriggerMsg(int channelNum) {
     QByteArray sendData = "$A1T;c" + QByteArray::number(channelNum) + ";#";

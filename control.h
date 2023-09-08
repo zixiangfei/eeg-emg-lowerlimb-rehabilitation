@@ -13,6 +13,8 @@
 #include <angle.h> //新建线程获取角度信息
 #include <wiringPi.h> //gpio
 #include <motorcontrol.h> //电机控制
+#include <emgdataget.h> //肌电信号获取
+
 using namespace log4cplus;
 using namespace log4cplus::helpers;
 
@@ -57,6 +59,12 @@ private slots:
 
     void getAngleSlot(double angle); //获取角度的槽
 
+    void BendPotentialSlot(); //屈点位的槽
+
+    void StretchPotentialSlot(); //伸电位的槽
+
+    void RestingPotentialSlot(); //静息电位的槽
+
 private:
     void Log4cplusInit();
 signals:
@@ -79,6 +87,7 @@ private:
     double angle; //角度值
     Angle *angleThread; //角度线程
     motorControl *motorControlThread; //电机线程
+    EmgDataGet *emgDataGetThread; //机电获取信号获取线程
 
 };
 extern int controlModel;

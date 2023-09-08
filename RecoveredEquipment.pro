@@ -15,10 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
     CustomControls/porttimetextedit.cpp \
+    PythonGIL/pythreadstatelock.cpp \
     angle.cpp \
     emg/emg.cpp \
     emg/emgserialport.cpp \
     emg/portchannelattr.cpp \
+    emgdataget.cpp \
     mainwindow.cpp \
     IcoHelper/iconhelper.cpp \
     SystemInfo/systeminfo.cpp \
@@ -40,6 +42,7 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     CustomControls/porttimetextedit.h \
     IcoHelper/iconhelper.h \
+    PythonGIL/pythreadstatelock.h \
     SystemInfo/systeminfo.h \
     angle.h \
     control.h \
@@ -47,6 +50,7 @@ HEADERS  += mainwindow.h \
     emg/emg.h \
     emg/emgserialport.h \
     emg/portchannelattr.h \
+    emgdataget.h \
     motorcontrol.h \
     setting.h \
     includes.h \
@@ -70,8 +74,30 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     res.qrc
 
+INCLUDEPATH += /usr/include/python3.9
+
 LIBS += /usr/lib/libmcrypt.so \
         /usr/lib/aarch64-linux-gnu/libhidapi-hidraw.so \
         /usr/lib/aarch64-linux-gnu/libfftw3.so.3 \
         /usr/local/lib/liblog4cplus.so \
-        "/usr/lib/libwiringPi.so"
+        "/usr/lib/libwiringPi.so" \
+        /usr/lib/aarch64-linux-gnu/libpython3.9.so
+
+DISTFILES += \
+    PythonCode/establishConnect.py \
+    PythonCode/extract_feature.py \
+    PythonCode/neuracle_lib/__init__.py \
+    PythonCode/neuracle_lib/__pycache__/__init__.cpython-37.pyc \
+    PythonCode/neuracle_lib/__pycache__/__init__.cpython-38.pyc \
+    PythonCode/neuracle_lib/__pycache__/__init__.cpython-39.pyc \
+    PythonCode/neuracle_lib/__pycache__/dataServer.cpython-37.pyc \
+    PythonCode/neuracle_lib/__pycache__/dataServer.cpython-38.pyc \
+    PythonCode/neuracle_lib/__pycache__/dataServer.cpython-39.pyc \
+    PythonCode/neuracle_lib/__pycache__/readbdfdata.cpython-37.pyc \
+    PythonCode/neuracle_lib/__pycache__/triggerBox.cpython-37.pyc \
+    PythonCode/neuracle_lib/__pycache__/triggerBox.cpython-39.pyc \
+    PythonCode/neuracle_lib/dataServer.py \
+    PythonCode/neuracle_lib/readbdfdata.py \
+    PythonCode/neuracle_lib/triggerBox.py \
+    PythonCode/online_fetch_data.py \
+    PythonCode/svm_model.pkl

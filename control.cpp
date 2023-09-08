@@ -88,6 +88,7 @@ Control::Control(QWidget *parent) :
     }
     angleThread = new Angle();//创建angle线程
     motorControlThread = new motorControl(); //电机线程
+    emgDataGetThread = new EmgDataGet(); //肌电信号获取线程
     connect(angleThread, SIGNAL(Angle_val(double)), this, SLOT(getAngleSlot(double))); //绑定获取角度的槽和信号
     connect(ui->start_stop_manual_Button,SIGNAL(clicked()),this,SLOT(manualStartStopSlot()));
     connect(ui->stretch_manual_Button,SIGNAL(clicked()),this,SLOT(manualStretchSlot()));
@@ -98,6 +99,9 @@ Control::Control(QWidget *parent) :
     connect(ui->bend_spinBox,SIGNAL(valueChanged(int)),this,SLOT(bendValueSlot(int)));
     connect(this, SIGNAL(motorStateSignal(double, double, int, int)), motorControlThread, SLOT(motorStateControlSlot(double, double, int, int))); //电机状态信号
     connect(this, SIGNAL(motorModelSignal(int)), motorControlThread, SLOT(motorModelControlSlot(int))); //模式选择信号
+    connect(this->emgDataGetThread, SIGNAL(BendPotentialSignal()), this, SLOT(BendPotentialSlot()));
+    connect(this->emgDataGetThread, SIGNAL(StretchPotentialSignal()), this, SLOT(StretchPotentialSlot()));
+    connect(this->emgDataGetThread, SIGNAL(RestingPotentialSignal()), this, SLOT(RestingPotentialSlot()));
     Log4cplusInit();
 }
 Control::~Control()
@@ -165,8 +169,11 @@ void Control::on_start_auto_pushButton_clicked()
 {
     timeValue = ui->time_spinBox->value();
     emit startEEGSiganl();
-    emit startTimerSignal(1000*60*timeValue);
+    //emit startTimerSignal(1000*60*timeValue);
     ui->time_spinBox->setDisabled(true);
+    ui->bend_spinBox->setDisabled(true);
+    ui->stretch_spinBox->setDisabled(true);
+    this->emgDataGetThread->start();
     emit ControlMsgSignal(INFO_MSG, tr("Start Read EEG Data..."));
     LOG4CPLUS_INFO(_logger,"Start Read EEG Data...");
 }
@@ -174,14 +181,17 @@ void Control::on_start_auto_pushButton_clicked()
 void Control::on_stop_auto_pushButton_clicked()
 {
     emit stopEEGsignal();
-     ui->time_spinBox->setDisabled(false);
+    ui->time_spinBox->setDisabled(false);
+    ui->bend_spinBox->setDisabled(false);
+    ui->stretch_spinBox->setDisabled(false);
     emit ControlMsgSignal(INFO_MSG, tr("Stop Read EEG Data..."));
+    this->emgDataGetThread->running = false;
     LOG4CPLUS_INFO(_logger,"Stop Read EEG Data...");
 }
 void Control::manualStartStopSlot() //send start or stop serial cmd
 {
      char temp[3];
-     qDebug() << startOrstop <<'\n';
+     //qDebug() << startOrstop <<'\n';
     if(startOrstop)
     {
           //Control::angleThread->exit();
@@ -190,12 +200,12 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
           mcd.control= 0X00;
           mcd.check = 0X55;
           startOrstop = false;
-          emit manualControlSignal(mcd);
+          //emit manualControlSignal(mcd); 原始代码数据传递
 
           ui->time_spinBox->setDisabled(false);
           emit ControlMsgSignal(INFO_MSG,tr("stop manual run device "));
-          Control::motorControlThread->terminateMotor();
           emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), 0, 0));
+          Control::motorControlThread->terminateMotor();
           //Control::motorControlThread->requestInterruption();
           Control::motorControlThread->exit();
           //qDebug()<< QThread::currentThreadId() << " " << "test\n";
@@ -206,7 +216,7 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
 
         startOrstop = true;
         timeValue = ui->time_spinBox->value();
-        qDebug()<<"timeValue"<<timeValue;
+        //qDebug()<<"timeValue"<<timeValue;
         mcd.head = 0XAA;
         mcd.cmd = 0XFF;
         mcd.control = 0X01;
@@ -216,15 +226,16 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
         temp[2] = 0X01;
         for (int i=0;i<=2;i++)
         mcd.check ^=temp[i];
-        emit manualControlSignal(mcd);
-        if(timeValue == 0)
-        {
-            emit startTimerSignal(1000*60*1);
-        }
-        else
-        {
-            emit startTimerSignal(1000*60*timeValue);
-        }
+//        emit manualControlSignal(mcd);
+//        if(timeValue == 0)
+//        {
+//            emit startTimerSignal(1000*60*1);
+//        }
+//        else
+//        {
+//            emit startTimerSignal(1000*60*timeValue);
+//        }
+        //原始代码的数据传递
         //emit startTimerSignal(1000*60*timeValue);
         //这句话正确性存疑 先注释掉
 
@@ -235,7 +246,8 @@ void Control::manualStartStopSlot() //send start or stop serial cmd
         //选择电机模式
         emit(motorModelSignal(REPEAT_MODE));
         Control::motorControlThread->start();
-        Control::motorControlThread->exit();
+        //emit(motorStateSignal(ui->stretch_spinBox->value(), ui->bend_spinBox->value(), 0, 0));
+        //Control::motorControlThread->exit();
     }
 }
 void Control::manualStretchSlot() //send manual stretch serial cmd
@@ -255,14 +267,14 @@ void Control::manualStretchSlot() //send manual stretch serial cmd
         for (int i=0;i<=2;i++)
             mcd.check ^=temp[i];
 
-        emit manualControlSignal(mcd);
+       // emit manualControlSignal(mcd); 原始代码的数据传递
     }
     else{
         emit ControlMsgSignal(INFO_MSG,tr("Device not start"));
     }
     emit(motorModelSignal(STRETCH_MODE));
     Control::motorControlThread->start();
-    Control::motorControlThread->exit();
+    //Control::motorControlThread->exit();
 }
 void Control::manualBendSlot() //send manual bend serial cmd
 {
@@ -281,7 +293,7 @@ void Control::manualBendSlot() //send manual bend serial cmd
         for (int i=0;i<=2;i++)
             mcd.check ^=temp[i];
 
-        emit manualControlSignal(mcd);
+        //emit manualControlSignal(mcd); 原始代码的数据传递
     }
     else{
         emit ControlMsgSignal(INFO_MSG,tr("Device not start"));
@@ -329,7 +341,7 @@ void Control::speendValueSlot(int arg)
     for (int i=0;i<=2;i++)
         mcd.check ^=temp[i];
     settings->setValue(SPEEDINFO_INI,arg);
-    emit manualControlSignal(mcd);
+    //emit manualControlSignal(mcd); 数据传递
 }
 
 void Control::stretchValueSlot(int arg)
@@ -347,7 +359,7 @@ void Control::stretchValueSlot(int arg)
     for (int i=0;i<=2;i++)
         mcd.check ^=temp[i];
     settings->setValue(STRETCH_INI,arg);
-    emit manualControlSignal(mcd);
+   // emit manualControlSignal(mcd); 原始代码数据传递
 }
 
 void Control::bendValueSlot(int arg)
@@ -367,7 +379,7 @@ void Control::bendValueSlot(int arg)
         mcd.check ^=temp[i];
     settings->setValue(BEND_INI,arg);
     qDebug()<<"bendValue="<<arg;
-    emit manualControlSignal(mcd);
+    //emit manualControlSignal(mcd); 原始代码数据传递
 }
 
 void Control::timeValueSlot(int arg)
@@ -395,4 +407,33 @@ void Control::timeSpinBoxSlot()
 
 void Control::getAngleSlot(double angle) {
     Control::angle = angle;
+}
+
+/*
+ * 屈电位控制电机
+ */
+void Control::BendPotentialSlot() {
+    this->motorControlThread->lanuchMotor();
+    this->motorControlThread->direction = BEND_DIRECTION;
+    this->motorControlThread->speed = ui->speed_spinBox->value();
+    this->motorControlThread->updateMotorState();
+}
+
+/*
+ * 屈电位控制电机
+ */
+void Control::StretchPotentialSlot() {
+    this->motorControlThread->lanuchMotor();
+    this->motorControlThread->direction = STRETCH_DIRECTION;
+    this->motorControlThread->speed = ui->speed_spinBox->value();
+    this->motorControlThread->updateMotorState();
+}
+
+/*
+ * 静息电位控制电机
+ */
+void Control::RestingPotentialSlot() {
+    this->motorControlThread->terminateMotor();
+    this->motorControlThread->speed = 0;
+    this->motorControlThread->updateMotorState();
 }

@@ -122,8 +122,8 @@ void motorControl::repeatModel() {
         //qDebug()<< QThread::currentThread() << " " << "test\n";
         double angle = motorControl::getAngle();
         //角度超过设定的阈值变更方向
-        qDebug() << angle <<" "<<motorControl::maxAngle << " " << motorControl::minAngle<<'\n';
-        qDebug() << moving <<'\n';
+        //qDebug() << angle <<" "<<motorControl::maxAngle << " " << motorControl::minAngle<<'\n';
+        //qDebug() << moving <<'\n';
         if((angle < motorControl::minAngle + 1 || angle > motorControl::maxAngle + 1)) {
             if(!moving) {
                 moving = true;
@@ -136,6 +136,7 @@ void motorControl::repeatModel() {
                 }
                 motorControl::updateMotorState();
                 motorControl::delay_msec(DIRECTION_DELAY);
+                nowTime += 1000;
                 motorControl::lanuchMotor();
             }
         }
@@ -151,12 +152,12 @@ void motorControl::repeatModel() {
             motorControl::terminateMotor();
         }
         //QCoreApplication::processEvents();
-        qDebug() << motorControl::direction <<'\n';
+        //qDebug() << motorControl::direction <<'\n';
         //qDebug() << nowTime << " " << motorControl::maxAngle << " " << motorControl::minAngle << " " << motorControl::speed << " " <<motorControl::runningTime << "\n";
     }
     motorControl::speed = 0;
-    motorControl::terminateMotor();
     motorControl::updateMotorState();
+    motorControl::terminateMotor();
 }
 
 /*
@@ -167,8 +168,9 @@ void motorControl::stretchModel() {
     motorControl::updateMotorState();
     motorControl::lanuchMotor();
     while(motorControl::getAngle() < motorControl::maxAngle) {
-        qDebug() << motorControl::direction << " " <<motorControl::getAngle() << '\n';
-        QCoreApplication::processEvents();
+        //qDebug() << motorControl::direction << " " <<motorControl::getAngle() << '\n';
+        //QCoreApplication::processEvents();
+        motorControl::delay_msec(RUNNING_DELAY);
     }
     motorControl::terminateMotor();
 
@@ -182,8 +184,9 @@ void motorControl::bendModel() {
     motorControl::updateMotorState();
     motorControl::lanuchMotor();
     while(motorControl::getAngle() > motorControl::minAngle) {
-        qDebug() << motorControl::direction << " " <<motorControl::getAngle() << '\n';
-        QCoreApplication::processEvents();
+        //qDebug() << motorControl::direction << " " <<motorControl::getAngle() << '\n';
+        //QCoreApplication::processEvents();
+        motorControl::delay_msec(RUNNING_DELAY);
     }
     motorControl::terminateMotor();
 }

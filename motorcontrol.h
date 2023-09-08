@@ -52,7 +52,7 @@ public:
     void lanuchMotor();
     void terminateMotor();
 
-private:
+public:
     double maxAngle;
     double minAngle;
     int speed;

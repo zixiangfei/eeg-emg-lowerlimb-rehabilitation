@@ -10,8 +10,8 @@
 #include<qtimer.h>
 #include<QTime>
 
-#define ZFpin 4 //方向 12
-#define VRpin 1 //速度 16
+#define ZFpin 1 //方向 12
+#define VRpin 4 //速度 16
 #define ELpin 5 //使能 18
 //PCF8591默认i2c设备地址
 //VCC -> 5v

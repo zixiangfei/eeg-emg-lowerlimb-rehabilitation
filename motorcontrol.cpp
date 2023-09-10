@@ -122,8 +122,8 @@ void motorControl::repeatModel() {
         //qDebug()<< QThread::currentThread() << " " << "test\n";
         double angle = motorControl::getAngle();
         //角度超过设定的阈值变更方向
-        //qDebug() << angle <<" "<<motorControl::maxAngle << " " << motorControl::minAngle<<'\n';
-        //qDebug() << moving <<'\n';
+        qDebug() << angle <<" "<<motorControl::maxAngle << " " << motorControl::minAngle<<'\n';
+        qDebug() << moving <<'\n';
         if((angle < motorControl::minAngle + 1 || angle > motorControl::maxAngle + 1)) {
             if(!moving) {
                 moving = true;

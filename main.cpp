@@ -8,8 +8,8 @@
 #include <wiringPi.h>
 #include <softPwm.h>
 #include <motorcontrol.h>
-#define ZFpin 4
-#define VRpin 1
+#define ZFpin 1
+#define VRpin 4
 #define ELpin 5
 //PCF8591默认i2c设备地址
 //VCC -> 5v
